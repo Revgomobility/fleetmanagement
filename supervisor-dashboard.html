@@ -41,6 +41,38 @@
 
         const shift = { area, date, startTime, endTime, ridersRequired };
 
+        function displayActiveShifts() {
+            const activeShiftsContainer = document.getElementById('active-shifts-list');
+            activeShiftsContainer.innerHTML = '';
+            if (activeShifts.length === 0) {
+                activeShiftsContainer.innerHTML = '<p>No active shifts available.</p>';
+                return;
+            }
+            
+            let table = `<table>
+                <tr>
+                    <th>Area</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Riders Required</th>
+                </tr>`;
+            
+            activeShifts.forEach(shift => {
+                table += `<tr>
+                    <td>${shift.area}</td>
+                    <td>${shift.date}</td>
+                    <td>${shift.startTime}</td>
+                    <td>${shift.endTime}</td>
+                    <td>${shift.ridersRequired}</td>
+                </tr>`;
+            });
+            
+            table += `</table>`;
+            activeShiftsContainer.innerHTML = table;
+            document.getElementById('active-shifts-count').innerText = activeShifts.length;
+        }
+        
         // Store in Active Shifts for Supervisor
         let activeShifts = JSON.parse(localStorage.getItem('activeShifts')) || [];
         activeShifts.push(shift);
