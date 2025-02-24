@@ -20,6 +20,8 @@
         select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
     </style>
     <script>
+        let activeShifts = [];
+
         function showDashboard(id) {
             document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
             document.getElementById(id).style.display = 'block';
@@ -27,19 +29,24 @@
                 displayActiveShifts();
             }
         }
-    function confirmRelease() {
-        const area = document.getElementById('release-area-select').value;
-        const date = document.getElementById('date-select').value;
-        const startTime = document.getElementById('start-time').value;
-        const endTime = document.getElementById('end-time').value;
-        const ridersRequired = document.getElementById('riders-required').value;
 
-        if (!date || !startTime || !endTime || !ridersRequired) {
-            alert("Please fill out all fields.");
-            return;
+        function confirmRelease() {
+            const area = document.getElementById('release-area-select').value;
+            const date = document.getElementById('date-select').value;
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+            const ridersRequired = document.getElementById('riders-required').value;
+            
+            if (!date || !startTime || !endTime || !ridersRequired) {
+                alert("Please fill out all fields.");
+                return;
+            }
+            
+            const shift = { area, date, startTime, endTime, ridersRequired };
+            activeShifts.push(shift);
+            alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
+            showDashboard('active-shifts');
         }
-
-        const shift = { area, date, startTime, endTime, ridersRequired };
 
         function displayActiveShifts() {
             const activeShiftsContainer = document.getElementById('active-shifts-list');
