@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        .container { width: 90%; max-width: 800px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; font-size: 24px; font-weight: bold; padding: 15px 0; border-bottom: 2px solid #ddd; }
+        .button { display: block; width: 100%; padding: 15px; margin: 10px 0; text-align: center; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 18px; }
+        .button:hover { background: #0056b3; }
+        .gant-chart { display: flex; flex-direction: column; margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; background: #fafafa; }
+    </style>
+    <script>
+        function showDashboard(id) {
+            const dashboard = document.getElementById(id);
+            if (dashboard) {
+                document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
+                dashboard.style.display = 'block';
+            } else {
+                console.error(`Dashboard with ID '${id}' not found.`);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Driver Dashboard</div>
+        <div class="gant-chart" id="driver-shift-list">
+            <!-- Add content for driver shifts here -->
+        </div>
+        <a href="#" class="button" onclick="showDashboard('my-tasks')">My Tasks</a>
+        <a href="landing.html" class="button">Logout</a>
+    </div>
+    
+    <div class="container dashboard" id="my-tasks" style="display:none;">
+        <div class="header">My Tasks</div>
+        <div class="gant-chart" id="driver-task-list">
+            <!-- Add content for driver tasks here -->
+        </div>
+        <a href="#" class="button" onclick="showDashboard('driver-dashboard')">Back</a>
+    </div>
+</body>
+</html>

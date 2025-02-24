@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisor Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        .container { width: 90%; max-width: 800px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; font-size: 24px; font-weight: bold; padding: 15px 0; border-bottom: 2px solid #ddd; }
+        .button { display: block; width: 100%; padding: 15px; margin: 10px 0; text-align: center; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 18px; }
+        .button:hover { background: #0056b3; }
+    </style>
+    <script>
+        function showDashboard(id) {
+            const dashboard = document.getElementById(id);
+            if (dashboard) {
+                document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
+                dashboard.style.display = 'block';
+            } else {
+                console.error(`Dashboard with ID '${id}' not found.`);
+            }
+        }
+
+        function confirmRelease() {
+            const area = document.getElementById('release-area-select').value;
+            const ridersRequired = document.getElementById('riders-required').value;
+            const day = document.getElementById('day-select').value;
+            alert(`Release confirmed for ${area} on ${day} with ${ridersRequired} riders.`);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Supervisor Dashboard</div>
+        <a href="#" class="button" onclick="showDashboard('block-release')">Release Blocks</a>
+        <a href="#" class="button" onclick="showDashboard('active-shifts')">Active Shifts (<span id="active-shifts-count">0</span>)</a>
+        <a href="landing.html" class="button">Logout</a>
+    </div>
+    
+    <div class="container dashboard" id="block-release" style="display:none;">
+        <div class="header">Release Blocks</div>
+        <label for="release-area-select">Select Area:</label>
+        <select id="release-area-select">
+            <option value="kondapur">Kondapur</option>
+            <option value="madhapur">Madhapur</option>
+            <option value="kukatpally">Kukatpally</option>
+            <option value="lingampally">Lingampally</option>
+        </select>
+        <label for="riders-required">Number of Riders Required:</label>
+        <input type="number" id="riders-required" name="riders-required" min="1" max="100">
+        <label for="day-select">Select Day:</label>
+        <select id="day-select">
+            <option value="monday">Monday</option>
+            <option value="tuesday">Tuesday</option>
+            <option value="wednesday">Wednesday</option>
+            <option value="thursday">Thursday</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+            <option value="sunday">Sunday</option>
+        </select>
+        <a href="#" class="button" onclick="confirmRelease()">Confirm Release</a>
+        <a href="#" class="button" onclick="showDashboard('supervisor-dashboard')">Back</a>
+    </div>
+    
+    <div class="container dashboard" id="active-shifts" style="display:none;">
+        <div class="header">Active Shifts</div>
+        <!-- Add content for active shifts here -->
+        <a href="#" class="button" onclick="showDashboard('supervisor-dashboard')">Back</a>
+    </div>
+</body>
+</html>
