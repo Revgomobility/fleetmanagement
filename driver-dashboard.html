@@ -13,78 +13,79 @@
         .shift-container { margin-top: 20px; padding: 10px; background: #fff; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
     </style>
     <script>
-        function loadAvailableShifts() {
-            let availableShifts = JSON.parse(localStorage.getItem('availableShifts')) || [];
-            const shiftContainer = document.getElementById('available-shifts');
-            shiftContainer.innerHTML = '';
+    function loadAvailableShifts() {
+        let availableShifts = JSON.parse(localStorage.getItem('availableShifts')) || [];
+        const shiftContainer = document.getElementById('available-shifts');
+        shiftContainer.innerHTML = '';
 
-            if (availableShifts.length === 0) {
-                shiftContainer.innerHTML = '<p>No available shifts at the moment.</p>';
-                return;
-            }
-
-            availableShifts.forEach((shift, index) => {
-                let shiftElement = document.createElement('div');
-                shiftElement.classList.add('shift-container');
-                shiftElement.innerHTML = `
-                    <p><strong>Area:</strong> ${shift.area}</p>
-                    <p><strong>Date:</strong> ${shift.date}</p>
-                    <p><strong>Start Time:</strong> ${shift.startTime}</p>
-                    <p><strong>End Time:</strong> ${shift.endTime}</p>
-                    <button class="button" onclick="acceptShift(${index})">Accept</button>
-                    <button class="button" style="background:#dc3545;" onclick="declineShift(${index})">Decline</button>
-                `;
-                shiftContainer.appendChild(shiftElement);
-            });
+        if (availableShifts.length === 0) {
+            shiftContainer.innerHTML = '<p>No available shifts at the moment.</p>';
+            return;
         }
 
-        function acceptShift(index) {
-            let availableShifts = JSON.parse(localStorage.getItem('availableShifts')) || [];
-            let acceptedShifts = JSON.parse(localStorage.getItem('acceptedShifts')) || [];
-            
-            acceptedShifts.push(availableShifts[index]);
-            availableShifts.splice(index, 1);
-            
-            localStorage.setItem('availableShifts', JSON.stringify(availableShifts));
-            localStorage.setItem('acceptedShifts', JSON.stringify(acceptedShifts));
-            
-            alert("Shift accepted and moved to My Tasks.");
-            loadAvailableShifts();
-            loadMyTasks();
-        }
-
-        function declineShift(index) {
-            alert("Shift declined.");
-        }
-
-        function loadMyTasks() {
-            let acceptedShifts = JSON.parse(localStorage.getItem('acceptedShifts')) || [];
-            const myTasksContainer = document.getElementById('my-tasks');
-            myTasksContainer.innerHTML = '';
-
-            if (acceptedShifts.length === 0) {
-                myTasksContainer.innerHTML = '<p>No assigned tasks.</p>';
-                return;
-            }
-
-            acceptedShifts.forEach(shift => {
-                let taskElement = document.createElement('div');
-                taskElement.classList.add('shift-container');
-                taskElement.innerHTML = `
-                    <p><strong>Area:</strong> ${shift.area}</p>
-                    <p><strong>Date:</strong> ${shift.date}</p>
-                    <p><strong>Start Time:</strong> ${shift.startTime}</p>
-                    <p><strong>End Time:</strong> ${shift.endTime}</p>
-                `;
-                myTasksContainer.appendChild(taskElement);
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            loadAvailableShifts();
-            loadMyTasks();
+        availableShifts.forEach((shift, index) => {
+            let shiftElement = document.createElement('div');
+            shiftElement.classList.add('shift-container');
+            shiftElement.innerHTML = `
+                <p><strong>Area:</strong> ${shift.area}</p>
+                <p><strong>Date:</strong> ${shift.date}</p>
+                <p><strong>Start Time:</strong> ${shift.startTime}</p>
+                <p><strong>End Time:</strong> ${shift.endTime}</p>
+                <button class="button" onclick="acceptShift(${index})">Accept</button>
+                <button class="button" style="background:#dc3545;" onclick="declineShift(${index})">Decline</button>
+            `;
+            shiftContainer.appendChild(shiftElement);
         });
-    </script>
+    }
+
+    function acceptShift(index) {
+        let availableShifts = JSON.parse(localStorage.getItem('availableShifts')) || [];
+        let acceptedShifts = JSON.parse(localStorage.getItem('acceptedShifts')) || [];
+
+        // Move accepted shift to My Tasks
+        acceptedShifts.push(availableShifts[index]);
+        availableShifts.splice(index, 1);
+
+        localStorage.setItem('availableShifts', JSON.stringify(availableShifts));
+        localStorage.setItem('acceptedShifts', JSON.stringify(acceptedShifts));
+
+        alert("Shift accepted and moved to My Tasks.");
+        loadAvailableShifts();
+        loadMyTasks();
+    }
+
+    function declineShift(index) {
+        alert("Shift declined.");
+    }
+
+    function loadMyTasks() {
+        let acceptedShifts = JSON.parse(localStorage.getItem('acceptedShifts')) || [];
+        const myTasksContainer = document.getElementById('my-tasks');
+        myTasksContainer.innerHTML = '';
+
+        if (acceptedShifts.length === 0) {
+            myTasksContainer.innerHTML = '<p>No assigned tasks.</p>';
+            return;
+        }
+
+        acceptedShifts.forEach(shift => {
+            let taskElement = document.createElement('div');
+            taskElement.classList.add('shift-container');
+            taskElement.innerHTML = `
+                <p><strong>Area:</strong> ${shift.area}</p>
+                <p><strong>Date:</strong> ${shift.date}</p>
+                <p><strong>Start Time:</strong> ${shift.startTime}</p>
+                <p><strong>End Time:</strong> ${shift.endTime}</p>
+            `;
+            myTasksContainer.appendChild(taskElement);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadAvailableShifts();
+        loadMyTasks();
+    });
+</script>
 </head>
 <body>
     <div class="container">
