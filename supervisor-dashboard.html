@@ -20,6 +20,13 @@
         select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
     </style>
     <script>
+        function showDashboard(id) {
+            document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            if (id === 'active-shifts') {
+                displayActiveShifts();
+            }
+        }
     function confirmRelease() {
         const area = document.getElementById('release-area-select').value;
         const date = document.getElementById('date-select').value;
