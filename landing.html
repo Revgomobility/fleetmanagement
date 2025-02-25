@@ -5,20 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logistics App Landing</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
-        .container { width: 90%; max-width: 800px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        .header { text-align: center; font-size: 24px; font-weight: bold; padding: 15px 0; border-bottom: 2px solid #ddd; }
-        .button { display: block; width: 100%; padding: 15px; margin: 10px 0; text-align: center; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 18px; }
-        .button:hover { background: #0056b3; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 900px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .section {
+            flex: 1;
+            padding: 40px;
+            text-align: center;
+        }
+        .driver {
+            background: #007bff;
+            color: white;
+        }
+        .supervisor {
+            background: #28a745;
+            color: white;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: block;
+            width: 80%;
+            padding: 15px;
+            margin: 10px auto;
+            text-align: center;
+            background: white;
+            color: inherit;
+            border: 2px solid inherit;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+        .driver .button {
+            background: white;
+            color: #007bff;
+            border-color: #007bff;
+        }
+        .supervisor .button {
+            background: white;
+            color: #28a745;
+            border-color: #28a745;
+        }
+        .driver .button:hover {
+            background: #0056b3;
+            color: white;
+        }
+        .supervisor .button:hover {
+            background: #1e7e34;
+            color: white;
+        }
+        .input-field {
+            display: block;
+            width: 80%;
+            padding: 10px;
+            margin: 10px auto;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">Logistics App</div>
-        <a href="login.html?role=driver" class="button">Driver Login</a>
-        <a href="signup.html?role=driver" class="button">Driver Signup</a>
-        <a href="login.html?role=supervisor" class="button">Supervisor Login</a>
-        <a href="signup.html?role=supervisor" class="button">Supervisor Signup</a>
+        <div class="section driver">
+            <div class="header">Driver</div>
+            <input type="text" class="input-field" placeholder="Enter Driver Username">
+            <input type="password" class="input-field" placeholder="Enter Driver Password">
+            <a href="login.html?role=driver" class="button">Login</a>
+            <div style="margin: 10px auto; font-weight: bold;">OR</div>
+            <a href="signup.html?role=driver" class="button">Sign Up</a>
+        </div>
+        <div class="section supervisor">
+            <div class="header">Supervisor</div>
+            <input type="text" class="input-field" placeholder="Enter Supervisor Username">
+            <input type="password" class="input-field" placeholder="Enter Supervisor Password">
+            <a href="login.html?role=supervisor" class="button">Login</a>
+            <div style="margin: 10px auto; font-weight: bold;">OR</div>
+            <a href="signup.html?role=supervisor" class="button">Sign Up</a>
+        </div>
     </div>
 </body>
 </html>
