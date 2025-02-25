@@ -20,9 +20,21 @@
         select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
     </style>
     <script>
-        function loadActiveShifts() {
-            return JSON.parse(localStorage.getItem('activeShifts')) || [];
+        function loadActiveShifts(response) {
+    // Check if response is empty or null before parsing
+    if (response && response.trim()) {
+        try {
+            const activeShifts = JSON.parse(response);
+            // Proceed with your logic here if parsing is successful
+            console.log('active shifts parsed OK');
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
         }
+    } else {
+        // Handle empty or invalid response
+        console.warn('Empty or invalid response received.');
+    }
+}
 
         function saveActiveShifts(shifts) {
             localStorage.setItem('activeShifts', JSON.stringify(shifts));
