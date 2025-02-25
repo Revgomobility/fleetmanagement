@@ -143,5 +143,28 @@
             </div>
         </div>
     </div>
+    <script>
+        function fetchAvailableBlocks() {
+            const blocks = JSON.parse(localStorage.getItem('releasedBlocks')) || [];
+            return blocks;
+        }
+
+        function acceptBlock(index) {
+            let blocks = fetchAvailableBlocks();
+            let acceptedTasks = JSON.parse(localStorage.getItem('acceptedTasks')) || [];
+            acceptedTasks.push(blocks[index]);
+            localStorage.setItem('acceptedTasks', JSON.stringify(acceptedTasks));
+            blocks.splice(index, 1);
+            localStorage.setItem('releasedBlocks', JSON.stringify(blocks));
+            window.location.reload();
+        }
+
+        function rejectBlock(index) {
+            let blocks = fetchAvailableBlocks();
+            blocks.splice(index, 1);
+            localStorage.setItem('releasedBlocks', JSON.stringify(blocks));
+            window.location.reload();
+        }
+    </script>
 </body>
 </html>
