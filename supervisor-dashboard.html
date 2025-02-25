@@ -79,22 +79,7 @@
             activeShiftsContainer.innerHTML = table;
             document.getElementById('active-shifts-count').innerText = activeShifts.length;
         }
-        
-        // Store in Active Shifts for Supervisor
-        let activeShifts = JSON.parse(localStorage.getItem('activeShifts')) || [];
-        activeShifts.push(shift);
-        localStorage.setItem('activeShifts', JSON.stringify(activeShifts));
-
-        // Store in Available Shifts for Drivers
-        let availableShifts = JSON.parse(localStorage.getItem('availableShifts')) || [];
-        availableShifts.push(shift);
-        localStorage.setItem('availableShifts', JSON.stringify(availableShifts));
-
-        alert(`Shift released for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
-
-        showDashboard('active-shifts'); // Switch to active shifts view
-    }
-</script>
+    </script>
 </head>
 <body>
     <div class="container">
