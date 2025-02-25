@@ -36,7 +36,8 @@
         function displayAvailableBlocks() {
             const availableBlocksContainer = document.getElementById('available-blocks-list');
             availableBlocksContainer.innerHTML = '';
-            if (activeShifts.length === 0) {
+            let filteredShifts = activeShifts.filter(shift => shift.ridersRequired > 0);
+            if (filteredShifts.length === 0) {
                 availableBlocksContainer.innerHTML = '<p>No blocks available.</p>';
                 return;
             }
@@ -51,7 +52,7 @@
                     <th>Action</th>
                 </tr>`;
             
-            activeShifts.forEach((shift, index) => {
+            filteredShifts.forEach((shift, index) => {
                 table += `<tr>
                     <td>${shift.area}</td>
                     <td>${shift.date}</td>
@@ -70,7 +71,11 @@
         }
 
         function acceptShift(index) {
-            let acceptedShift = activeShifts.splice(index, 1)[0];
+            let acceptedShift = activeShifts[index];
+            acceptedShift.ridersRequired -= 1;
+            if (acceptedShift.ridersRequired < 1) {
+                activeShifts.splice(index, 1);
+            }
             myTasks.push(acceptedShift);
             localStorage.setItem('activeShifts', JSON.stringify(activeShifts));
             localStorage.setItem('myTasks', JSON.stringify(myTasks));
