@@ -10,90 +10,128 @@
         .header { text-align: center; font-size: 24px; font-weight: bold; padding: 15px 0; border-bottom: 2px solid #ddd; }
         .button { display: block; width: 100%; padding: 15px; margin: 10px 0; text-align: center; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 18px; }
         .button:hover { background: #0056b3; }
-        .shift-container { margin-top: 20px; padding: 10px; background: #fff; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        .dashboard { display: none; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; }
+        th { background: #007bff; color: white; }
+        .action-buttons { display: flex; gap: 10px; }
+        .accept { background: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
+        .reject { background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
     </style>
     <script>
-    function loadAvailableShifts() {
-        let availableShifts = JSON.parse(localStorage.getItem('availableShifts')) || [];
-        const shiftContainer = document.getElementById('available-shifts');
-        shiftContainer.innerHTML = '';
+        let activeShifts = JSON.parse(localStorage.getItem('activeShifts')) || [];
+        let myTasks = JSON.parse(localStorage.getItem('myTasks')) || [];
 
-        if (availableShifts.length === 0) {
-            shiftContainer.innerHTML = '<p>No available shifts at the moment.</p>';
-            return;
+        function showDashboard(id) {
+            document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            if (id === 'available-blocks') {
+                displayAvailableBlocks();
+            } else if (id === 'my-tasks') {
+                displayMyTasks();
+            }
         }
 
-        availableShifts.forEach((shift, index) => {
-            let shiftElement = document.createElement('div');
-            shiftElement.classList.add('shift-container');
-            shiftElement.innerHTML = `
-                <p><strong>Area:</strong> ${shift.area}</p>
-                <p><strong>Date:</strong> ${shift.date}</p>
-                <p><strong>Start Time:</strong> ${shift.startTime}</p>
-                <p><strong>End Time:</strong> ${shift.endTime}</p>
-                <button class="button" onclick="acceptShift(${index})">Accept</button>
-                <button class="button" style="background:#dc3545;" onclick="declineShift(${index})">Decline</button>
-            `;
-            shiftContainer.appendChild(shiftElement);
-        });
-    }
-
-    function acceptShift(index) {
-        let availableShifts = JSON.parse(localStorage.getItem('availableShifts')) || [];
-        let acceptedShifts = JSON.parse(localStorage.getItem('acceptedShifts')) || [];
-
-        // Move accepted shift to My Tasks
-        acceptedShifts.push(availableShifts[index]);
-        availableShifts.splice(index, 1);
-
-        localStorage.setItem('availableShifts', JSON.stringify(availableShifts));
-        localStorage.setItem('acceptedShifts', JSON.stringify(acceptedShifts));
-
-        alert("Shift accepted and moved to My Tasks.");
-        loadAvailableShifts();
-        loadMyTasks();
-    }
-
-    function declineShift(index) {
-        alert("Shift declined.");
-    }
-
-    function loadMyTasks() {
-        let acceptedShifts = JSON.parse(localStorage.getItem('acceptedShifts')) || [];
-        const myTasksContainer = document.getElementById('my-tasks');
-        myTasksContainer.innerHTML = '';
-
-        if (acceptedShifts.length === 0) {
-            myTasksContainer.innerHTML = '<p>No assigned tasks.</p>';
-            return;
+        function displayAvailableBlocks() {
+            const availableBlocksContainer = document.getElementById('available-blocks-list');
+            availableBlocksContainer.innerHTML = '';
+            if (activeShifts.length === 0) {
+                availableBlocksContainer.innerHTML = '<p>No blocks available.</p>';
+                return;
+            }
+            
+            let table = `<table>
+                <tr>
+                    <th>Area</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Riders Required</th>
+                    <th>Action</th>
+                </tr>`;
+            
+            activeShifts.forEach((shift, index) => {
+                table += `<tr>
+                    <td>${shift.area}</td>
+                    <td>${shift.date}</td>
+                    <td>${shift.startTime}</td>
+                    <td>${shift.endTime}</td>
+                    <td>${shift.ridersRequired}</td>
+                    <td class="action-buttons">
+                        <button class="accept" onclick="acceptShift(${index})">Accept</button>
+                        <button class="reject" onclick="rejectShift(${index})">Reject</button>
+                    </td>
+                </tr>`;
+            });
+            
+            table += `</table>`;
+            availableBlocksContainer.innerHTML = table;
         }
 
-        acceptedShifts.forEach(shift => {
-            let taskElement = document.createElement('div');
-            taskElement.classList.add('shift-container');
-            taskElement.innerHTML = `
-                <p><strong>Area:</strong> ${shift.area}</p>
-                <p><strong>Date:</strong> ${shift.date}</p>
-                <p><strong>Start Time:</strong> ${shift.startTime}</p>
-                <p><strong>End Time:</strong> ${shift.endTime}</p>
-            `;
-            myTasksContainer.appendChild(taskElement);
-        });
-    }
+        function acceptShift(index) {
+            let acceptedShift = activeShifts.splice(index, 1)[0];
+            myTasks.push(acceptedShift);
+            localStorage.setItem('activeShifts', JSON.stringify(activeShifts));
+            localStorage.setItem('myTasks', JSON.stringify(myTasks));
+            displayAvailableBlocks();
+            displayMyTasks();
+        }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        loadAvailableShifts();
-        loadMyTasks();
-    });
-</script>
+        function rejectShift(index) {
+            activeShifts.splice(index, 1);
+            localStorage.setItem('activeShifts', JSON.stringify(activeShifts));
+            displayAvailableBlocks();
+        }
+
+        function displayMyTasks() {
+            const myTasksContainer = document.getElementById('my-tasks-list');
+            myTasksContainer.innerHTML = '';
+            if (myTasks.length === 0) {
+                myTasksContainer.innerHTML = '<p>No tasks assigned.</p>';
+                return;
+            }
+            
+            let table = `<table>
+                <tr>
+                    <th>Area</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>`;
+            
+            myTasks.forEach(task => {
+                table += `<tr>
+                    <td>${task.area}</td>
+                    <td>${task.date}</td>
+                    <td>${task.startTime}</td>
+                    <td>${task.endTime}</td>
+                </tr>`;
+            });
+            
+            table += `</table>`;
+            myTasksContainer.innerHTML = table;
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <div class="header">Driver Dashboard</div>
-        <div id="available-shifts"></div>
-        <a href="#" class="button" onclick="loadMyTasks();">My Tasks</a>
-        <div id="my-tasks" class="container" style="margin-top:20px;"></div>
+        <a href="#" class="button" onclick="showDashboard('available-blocks')">Available Blocks</a>
+        <a href="#" class="button" onclick="showDashboard('my-tasks')">My Tasks</a>
         <a href="landing.html" class="button">Logout</a>
+    </div>
+    
+    <div class="container dashboard" id="available-blocks" style="display:none;">
+        <div class="header">Available Blocks</div>
+        <div id="available-blocks-list"></div>
+        <a href="#" class="button" onclick="showDashboard('driver-dashboard')">Back</a>
+    </div>
+    
+    <div class="container dashboard" id="my-tasks" style="display:none;">
+        <div class="header">My Tasks</div>
+        <div id="my-tasks-list"></div>
+        <a href="#" class="button" onclick="showDashboard('driver-dashboard')">Back</a>
     </div>
 </body>
 </html>
