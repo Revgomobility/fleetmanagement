@@ -20,7 +20,7 @@
         select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
     </style>
     <script>
-        let activeShifts = [];
+        let activeShifts = JSON.parse(localStorage.getItem('activeShifts')) || [];
 
         function showDashboard(id) {
             document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
@@ -42,8 +42,9 @@
                 return;
             }
             
-            const shift = { area, date, startTime, endTime, ridersRequired };
+            const shift = { area, date, startTime, endTime, ridersRequired, status: 'available' };
             activeShifts.push(shift);
+            localStorage.setItem('activeShifts', JSON.stringify(activeShifts));
             alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
             showDashboard('active-shifts');
         }
@@ -86,7 +87,7 @@
         <div class="header">Supervisor Dashboard</div>
         <a href="#" class="button" onclick="showDashboard('block-release')">Release Blocks</a>
         <a href="#" class="button" onclick="showDashboard('active-shifts')">Active Shifts (<span id="active-shifts-count">0</span>)</a>
-        <a href="landing.html" class="button">Logout</a>
+        <a href="landing.html" class="button" >Logout</a>
     </div>
     
     <div class="container dashboard" id="block-release" style="display:none;">
