@@ -20,25 +20,7 @@
         select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
     </style>
     <script>
-        function loadActiveShifts(response) {
-    // Check if response is empty or null before parsing
-    if (response && response.trim()) {
-        try {
-            const activeShifts = JSON.parse(response);
-            // Proceed with your logic here if parsing is successful
-            console.log('active shifts parsed OK');
-        } catch (error) {
-            console.error('Error parsing JSON:', error);
-        }
-    } else {
-        // Handle empty or invalid response
-        console.warn('Empty or invalid response received.');
-    }
-}
-
-        function saveActiveShifts(shifts) {
-            localStorage.setItem('activeShifts', JSON.stringify(shifts));
-        }
+        let activeShifts = [];
 
         function showDashboard(id) {
             document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
@@ -53,23 +35,20 @@
             const date = document.getElementById('date-select').value;
             const startTime = document.getElementById('start-time').value;
             const endTime = document.getElementById('end-time').value;
-            const ridersRequired = parseInt(document.getElementById('riders-required').value);
+            const ridersRequired = document.getElementById('riders-required').value;
             
             if (!date || !startTime || !endTime || !ridersRequired) {
                 alert("Please fill out all fields.");
                 return;
             }
             
-            let activeShifts = loadActiveShifts();
-            const shift = { area, date, startTime, endTime, ridersRequired, status: 'available' };
+            const shift = { area, date, startTime, endTime, ridersRequired };
             activeShifts.push(shift);
-            saveActiveShifts(activeShifts);
             alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
             showDashboard('active-shifts');
         }
 
         function displayActiveShifts() {
-            let activeShifts = loadActiveShifts();
             const activeShiftsContainer = document.getElementById('active-shifts-list');
             activeShiftsContainer.innerHTML = '';
             if (activeShifts.length === 0) {
@@ -100,8 +79,6 @@
             activeShiftsContainer.innerHTML = table;
             document.getElementById('active-shifts-count').innerText = activeShifts.length;
         }
-
-        document.addEventListener('DOMContentLoaded', displayActiveShifts);
     </script>
 </head>
 <body>
