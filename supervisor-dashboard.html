@@ -52,7 +52,7 @@
             const shift = { area, date, startTime, endTime, ridersRequired };
             activeShifts.push(shift);
             saveActiveShifts(activeShifts);
-            console.log("Active Shifts Stored:", activeShifts);
+            console.log("Shift stored in localStorage:", activeShifts);
             alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
             displayActiveShifts();
             showDashboard('active-shifts');
@@ -88,6 +88,7 @@
             
             table += `</table>`;
             activeShiftsContainer.innerHTML = table;
+            console.log("Active Shifts Displayed:", activeShifts);
             document.getElementById('active-shifts-count').innerText = activeShifts.length;
         }
 
