@@ -21,19 +21,33 @@
     </style>
     <script>
         function loadActiveShifts() {
-            return JSON.parse(localStorage.getItem('activeShifts')) || [];
+            try {
+                let storedShifts = localStorage.getItem('activeShifts');
+                return storedShifts ? JSON.parse(storedShifts) : [];
+            } catch (error) {
+                console.error("Error parsing activeShifts from localStorage, resetting to empty array:", error);
+                localStorage.setItem('activeShifts', JSON.stringify([]));
+                return [];
+            }
         }
 
         function saveActiveShifts(shifts) {
-            localStorage.setItem('activeShifts', JSON.stringify(shifts));
+            localStorage.setItem('activeShifts', JSON.stringify(shifts || []));
         }
 
         function loadMyTasks() {
-            return JSON.parse(localStorage.getItem('myTasks')) || [];
+            try {
+                let storedTasks = localStorage.getItem('myTasks');
+                return storedTasks ? JSON.parse(storedTasks) : [];
+            } catch (error) {
+                console.error("Error parsing myTasks from localStorage, resetting to empty array:", error);
+                localStorage.setItem('myTasks', JSON.stringify([]));
+                return [];
+            }
         }
 
         function saveMyTasks(tasks) {
-            localStorage.setItem('myTasks', JSON.stringify(tasks));
+            localStorage.setItem('myTasks', JSON.stringify(tasks || []));
         }
 
         function showDashboard(id) {
@@ -143,18 +157,6 @@
         <a href="#" class="button" onclick="showDashboard('available-blocks')">Available Blocks</a>
         <a href="#" class="button" onclick="showDashboard('my-tasks')">My Tasks</a>
         <a href="landing.html" class="button">Logout</a>
-    </div>
-    
-    <div class="container dashboard" id="available-blocks" style="display:none;">
-        <div class="header">Available Blocks</div>
-        <div id="available-blocks-list"></div>
-        <a href="#" class="button" onclick="showDashboard('driver-dashboard')">Back</a>
-    </div>
-    
-    <div class="container dashboard" id="my-tasks" style="display:none;">
-        <div class="header">My Tasks</div>
-        <div id="my-tasks-list"></div>
-        <a href="#" class="button" onclick="showDashboard('driver-dashboard')">Back</a>
     </div>
 </body>
 </html>
