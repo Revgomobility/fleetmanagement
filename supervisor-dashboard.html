@@ -62,8 +62,6 @@
             
             
             const shift = { area, date, startTime, endTime, ridersRequired };
-            
-            activeShifts.push(shift);
             let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
             allShifts.push(shift);
             localStorage.setItem('allShifts', JSON.stringify(allShifts));
@@ -77,10 +75,6 @@
         function displayActiveShifts() {
             let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
             let activeShifts = allShifts; // Ensure all shifts are displayed
-            
-            let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
-             // Ensure all shifts are displayed
-            let activeShifts = loadActiveShifts();
             const activeShiftsContainer = document.getElementById('active-shifts-list');
             if (!activeShiftsContainer) {
                 console.error('Active shifts container not found');
