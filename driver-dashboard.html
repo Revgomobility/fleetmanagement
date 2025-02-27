@@ -104,7 +104,31 @@
             table += `</table>`;
             availableBlocksContainer.innerHTML = table;
         }
-    </script>
+    function acceptShift(index) {
+            let activeShifts = loadActiveShifts();
+            let myTasks = loadMyTasks();
+            if (index < 0 || index >= activeShifts.length) {
+                console.error('Invalid shift index:', index);
+                return;
+            }
+            myTasks.push(acceptedShift);
+            saveActiveShifts(activeShifts);
+            saveMyTasks(myTasks);
+            displayAvailableBlocks();
+            displayMyTasks();
+        }
+
+        function rejectShift(index) {
+            let activeShifts = loadActiveShifts();
+            if (index < 0 || index >= activeShifts.length) {
+                console.error('Invalid shift index:', index);
+                return;
+            }
+            activeShifts.splice(index, 1);
+            saveActiveShifts(activeShifts);
+            displayAvailableBlocks();
+        }
+</script>
 </head>
 <body>
     <div class="container">
