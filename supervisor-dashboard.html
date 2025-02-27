@@ -60,7 +60,9 @@
                 return;
             }
             
-            let activeShifts = loadActiveShifts();
+            
+            let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
+            activeShifts = allShifts;
             const shift = { area, date, startTime, endTime, ridersRequired };
             activeShifts.push(shift);
             let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
