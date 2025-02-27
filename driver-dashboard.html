@@ -111,6 +111,18 @@
                 console.error('Invalid shift index:', index);
                 return;
             }
+            let acceptedShift = activeShifts.splice(index, 1)[0]; // Remove the accepted shift from available blocks
+            myTasks.push(acceptedShift);
+            saveActiveShifts(activeShifts);
+            saveMyTasks(myTasks);
+            displayAvailableBlocks();
+            displayMyTasks();
+            let activeShifts = loadActiveShifts();
+            let myTasks = loadMyTasks();
+            if (index < 0 || index >= activeShifts.length) {
+                console.error('Invalid shift index:', index);
+                return;
+            }
             let acceptedShift = activeShifts[index];
             acceptedShift.ridersRequired -= 1;
             if (acceptedShift.ridersRequired < 1) {
@@ -129,9 +141,50 @@
                 console.error('Invalid shift index:', index);
                 return;
             }
+            activeShifts.splice(index, 1); // Remove the rejected shift from available blocks
+            saveActiveShifts(activeShifts);
+            displayAvailableBlocks();
+            let activeShifts = loadActiveShifts();
+            if (index < 0 || index >= activeShifts.length) {
+                console.error('Invalid shift index:', index);
+                return;
+            }
             activeShifts.splice(index, 1);
             saveActiveShifts(activeShifts);
             displayAvailableBlocks();
+        }
+function displayMyTasks() {
+            let myTasks = loadMyTasks();
+            const myTasksContainer = document.getElementById('my-tasks-list');
+            if (!myTasksContainer) {
+                console.error('My tasks container not found');
+                return;
+            }
+            myTasksContainer.innerHTML = '';
+            if (myTasks.length === 0) {
+                myTasksContainer.innerHTML = '<p>No tasks assigned.</p>';
+                return;
+            }
+            
+            let table = `<table>
+                <tr>
+                    <th>Area</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>`;
+            
+            myTasks.forEach(task => {
+                table += `<tr>
+                    <td>${task.area}</td>
+                    <td>${task.date}</td>
+                    <td>${task.startTime}</td>
+                    <td>${task.endTime}</td>
+                </tr>`;
+            });
+            
+            table += `</table>`;
+            myTasksContainer.innerHTML = table;
         }
 </script>
 </head>
