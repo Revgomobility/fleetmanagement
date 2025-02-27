@@ -122,5 +122,35 @@
         <div class="header">Active Shifts</div>
         <div id="active-shifts-list"></div>
     </div>
+<div class="container dashboard" id="block-release" style="display:none;">
+        <div class="header">Release Blocks</div>
+        <div class="form-group">
+            <label for="release-area-select">Select Area:</label>
+            <select id="release-area-select">
+                <option value="kondapur">Kondapur</option>
+                <option value="madhapur">Madhapur</option>
+                <option value="kukatpally">Kukatpally</option>
+                <option value="lingampally">Lingampally</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date-select">Select Date:</label>
+            <input type="date" id="date-select">
+        </div>
+        <div class="form-group">
+            <label for="start-time">Start Time:</label>
+            <input type="time" id="start-time">
+        </div>
+        <div class="form-group">
+            <label for="end-time">End Time:</label>
+            <input type="time" id="end-time">
+        </div>
+        <div class="form-group">
+            <label for="riders-required">Number of Riders Required:</label>
+            <input type="number" id="riders-required" name="riders-required" min="1" max="100">
+        </div>
+        <a href="#" class="button" onclick="confirmRelease()">Confirm Release</a>
+        <a href="#" class="button" onclick="showDashboard('supervisor-dashboard')">Back</a>
+    </div>
 </body>
 </html>
