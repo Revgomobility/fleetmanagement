@@ -20,18 +20,19 @@
         select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
     </style>
     <script>
-        function loadActiveShifts() {
+        function loadAllShifts() {
             try {
-                return JSON.parse(localStorage.getItem('activeShifts')) || [];
+                let storedShifts = localStorage.getItem('allShifts');
+                return storedShifts ? JSON.parse(storedShifts) : [];
             } catch (error) {
-                console.error("Error parsing activeShifts from localStorage, resetting to empty array:", error);
-                localStorage.setItem('activeShifts', JSON.stringify([]));
+                console.error("Error parsing allShifts from localStorage, resetting to empty array:", error);
+                localStorage.setItem('allShifts', JSON.stringify([]));
                 return [];
             }
         }
 
-        function saveActiveShifts(shifts) {
-            localStorage.setItem('activeShifts', JSON.stringify(shifts || []));
+        function saveAllShifts(shifts) {
+            localStorage.setItem('allShifts', JSON.stringify(shifts || []));
         }
 
         function showDashboard(id) {
@@ -48,13 +49,7 @@
         }
 
         function confirmRelease() {
-            let allShifts = [];
-            try {
-                allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
-            } catch (error) {
-                console.error("Error parsing allShifts from localStorage, resetting to empty array:", error);
-                localStorage.setItem('allShifts', JSON.stringify([]));
-            }
+            let allShifts = loadAllShifts();
             const area = document.getElementById('release-area-select').value;
             const date = document.getElementById('date-select').value;
             const startTime = document.getElementById('start-time').value;
@@ -68,7 +63,7 @@
             
             const shift = { area, date, startTime, endTime, ridersRequired };
             allShifts.push(shift);
-            localStorage.setItem('allShifts', JSON.stringify(allShifts));
+            saveAllShifts(allShifts);
             console.log("Shift stored in localStorage:", allShifts);
             alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
             if (document.getElementById('active-shifts').style.display === 'block') {
@@ -77,13 +72,7 @@
         }
 
         function displayActiveShifts() {
-            let allShifts = [];
-            try {
-                allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
-            } catch (error) {
-                console.error("Error parsing allShifts from localStorage, resetting to empty array:", error);
-                localStorage.setItem('allShifts', JSON.stringify([]));
-            }
+            let allShifts = loadAllShifts();
             const activeShiftsContainer = document.getElementById('active-shifts-list');
             if (!activeShiftsContainer) {
                 console.error('Active shifts container not found');
@@ -120,11 +109,7 @@
             document.getElementById('active-shifts-count').innerText = allShifts.length;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (document.getElementById('active-shifts').style.display === 'block') {
-                displayActiveShifts();
-            }
-        });
+        document.addEventListener('DOMContentLoaded', displayActiveShifts);
     </script>
 </head>
 <body>
@@ -137,35 +122,6 @@
     <div class="container dashboard" id="active-shifts" style="display:none;">
         <div class="header">Active Shifts</div>
         <div id="active-shifts-list"></div>
-    </div>
-<div class="container dashboard" id="block-release" style="display:none;">
-        <div class="header">Release Blocks</div>
-        <div class="form-group">
-            <label for="release-area-select">Select Area:</label>
-            <select id="release-area-select">
-                <option value="kondapur">Kondapur</option>
-                <option value="madhapur">Madhapur</option>
-                <option value="kukatpally">Kukatpally</option>
-                <option value="lingampally">Lingampally</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="date-select">Select Date:</label>
-            <input type="date" id="date-select">
-        </div>
-        <div class="form-group">
-            <label for="start-time">Start Time:</label>
-            <input type="time" id="start-time">
-        </div>
-        <div class="form-group">
-            <label for="end-time">End Time:</label>
-            <input type="time" id="end-time">
-        </div>
-        <div class="form-group">
-            <label for="riders-required">Number of Riders Required:</label>
-            <input type="number" id="riders-required" name="riders-required" min="1" max="100">
-        </div>
-        <a href="#" class="button" onclick="confirmRelease()">Confirm Release</a>
     </div>
 </body>
 </html>
