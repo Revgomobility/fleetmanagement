@@ -63,6 +63,9 @@
             let activeShifts = loadActiveShifts();
             const shift = { area, date, startTime, endTime, ridersRequired };
             activeShifts.push(shift);
+            let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
+            allShifts.push(shift);
+            localStorage.setItem('allShifts', JSON.stringify(allShifts));
             saveActiveShifts(activeShifts);
             console.log("Shift stored in localStorage:", activeShifts);
             alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
@@ -71,6 +74,9 @@
         }
 
         function displayActiveShifts() {
+            let activeShifts = loadActiveShifts();
+            let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
+            activeShifts = allShifts; // Ensure all shifts are displayed
             let activeShifts = loadActiveShifts();
             const activeShiftsContainer = document.getElementById('active-shifts-list');
             if (!activeShiftsContainer) {
