@@ -21,11 +21,18 @@
     </style>
     <script>
         function loadActiveShifts() {
-            return JSON.parse(localStorage.getItem('activeShifts')) || [];
+            try {
+                let storedShifts = localStorage.getItem('activeShifts');
+                return storedShifts ? JSON.parse(storedShifts) : [];
+            } catch (error) {
+                console.error("Error parsing activeShifts from localStorage, resetting to empty array:", error);
+                localStorage.setItem('activeShifts', JSON.stringify([]));
+                return [];
+            }
         }
 
         function saveActiveShifts(shifts) {
-            localStorage.setItem('activeShifts', JSON.stringify(shifts));
+            localStorage.setItem('activeShifts', JSON.stringify(shifts || []));
         }
 
         function showDashboard(id) {
@@ -92,7 +99,17 @@
             document.getElementById('active-shifts-count').innerText = activeShifts.length;
         }
 
-        document.addEventListener('DOMContentLoaded', displayActiveShifts);
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                let activeShifts = loadActiveShifts();
+                if (!Array.isArray(activeShifts)) throw new Error("Corrupted localStorage data");
+                displayActiveShifts();
+            } catch (error) {
+                console.error("Resetting corrupted localStorage data:", error);
+                localStorage.setItem('activeShifts', JSON.stringify([]));
+                displayActiveShifts();
+            }
+        });
     </script>
 </head>
 <body>
@@ -133,11 +150,9 @@
         <a href="#" class="button" onclick="confirmRelease()">Confirm Release</a>
         <a href="#" class="button" onclick="showDashboard('supervisor-dashboard')">Back</a>
     </div>
-    
     <div class="container dashboard" id="active-shifts" style="display:none;">
         <div class="header">Active Shifts</div>
         <div id="active-shifts-list"></div>
-        <a href="#" class="button" onclick="showDashboard('supervisor-dashboard')">Back</a>
     </div>
 </body>
 </html>
