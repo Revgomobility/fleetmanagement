@@ -35,12 +35,26 @@
             const date = document.getElementById('date-select').value;
             const startTime = document.getElementById('start-time').value;
             const endTime = document.getElementById('end-time').value;
-            const ridersRequired = document.getElementById('riders-required').value;
+            const ridersRequired = parseInt(document.getElementById('riders-required').value);
             
             if (!date || !startTime || !endTime || !ridersRequired) {
                 alert("Please fill out all fields.");
                 return;
-            }
+    }
+
+    let activeShifts = loadActiveShifts();
+    const shift = { area, date, startTime, endTime, ridersRequired };
+
+    activeShifts.push(shift);
+    saveActiveShifts(activeShifts);
+
+    console.log("Active Shifts Stored:", activeShifts); // Debugging Line
+
+    alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
+    displayActiveShifts();
+    showDashboard('active-shifts');
+}
+
             
             const shift = { area, date, startTime, endTime, ridersRequired };
             activeShifts.push(shift);
