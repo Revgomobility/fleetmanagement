@@ -53,8 +53,18 @@
         }
 
         function showDashboard(id) {
+            let dashboardElement = document.getElementById(id);
+            if (!dashboardElement) {
+                console.error('Dashboard element not found:', id);
+                return;
+            }
             document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
+            let element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'block';
+            } else {
+                console.error('Dashboard element not found:', id);
+            }
             if (id === 'available-blocks') {
                 displayAvailableBlocks();
             } else if (id === 'my-tasks') {
