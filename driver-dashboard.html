@@ -57,12 +57,7 @@
                 return;
             }
             document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
-            let element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'block';
-            } else {
-                console.error('Dashboard element not found:', id);
-            }
+            dashboardElement.style.display = 'block';
             if (id === 'available-blocks') {
                 displayAvailableBlocks();
             } else if (id === 'my-tasks') {
@@ -73,6 +68,10 @@
         function displayAvailableBlocks() {
             let activeShifts = loadActiveShifts();
             const availableBlocksContainer = document.getElementById('available-blocks-list');
+            if (!availableBlocksContainer) {
+                console.error('Available blocks container not found');
+                return;
+            }
             availableBlocksContainer.innerHTML = '';
             let filteredShifts = activeShifts.filter(shift => shift.ridersRequired > 0);
             if (filteredShifts.length === 0) {
@@ -86,7 +85,6 @@
                     <th>Date</th>
                     <th>Start Time</th>
                     <th>End Time</th>
-                    
                     <th>Action</th>
                 </tr>`;
             
@@ -96,7 +94,6 @@
                     <td>${shift.date}</td>
                     <td>${shift.startTime}</td>
                     <td>${shift.endTime}</td>
-                    
                     <td class="action-buttons">
                         <button class="accept" onclick="acceptShift(${index})">Accept</button>
                         <button class="reject" onclick="rejectShift(${index})">Reject</button>
@@ -107,58 +104,6 @@
             table += `</table>`;
             availableBlocksContainer.innerHTML = table;
         }
-
-        function acceptShift(index) {
-            let activeShifts = loadActiveShifts();
-            let myTasks = loadMyTasks();
-            let acceptedShift = activeShifts[index];
-            acceptedShift.ridersRequired -= 1;
-            if (acceptedShift.ridersRequired < 1) {
-                activeShifts.splice(index, 1);
-            }
-            myTasks.push(acceptedShift);
-            saveActiveShifts(activeShifts);
-            saveMyTasks(myTasks);
-            displayAvailableBlocks();
-            displayMyTasks();
-        }
-
-        function rejectShift(index) {
-            let activeShifts = loadActiveShifts();
-            activeShifts.splice(index, 1);
-            saveActiveShifts(activeShifts);
-            displayAvailableBlocks();
-        }
-
-        function displayMyTasks() {
-            let myTasks = loadMyTasks();
-            const myTasksContainer = document.getElementById('my-tasks-list');
-            myTasksContainer.innerHTML = '';
-            if (myTasks.length === 0) {
-                myTasksContainer.innerHTML = '<p>No tasks assigned.</p>';
-                return;
-            }
-            
-            let table = `<table>
-                <tr>
-                    <th>Area</th>
-                    <th>Date</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                </tr>`;
-            
-            myTasks.forEach(task => {
-                table += `<tr>
-                    <td>${task.area}</td>
-                    <td>${task.date}</td>
-                    <td>${task.startTime}</td>
-                    <td>${task.endTime}</td>
-                </tr>`;
-            });
-            
-            table += `</table>`;
-            myTasksContainer.innerHTML = table;
-        }
     </script>
 </head>
 <body>
@@ -167,6 +112,14 @@
         <a href="#" class="button" onclick="showDashboard('available-blocks')">Available Blocks</a>
         <a href="#" class="button" onclick="showDashboard('my-tasks')">My Tasks</a>
         <a href="landing.html" class="button">Logout</a>
+    </div>
+    <div class="container dashboard" id="available-blocks" style="display:none;">
+        <div class="header">Available Blocks</div>
+        <div id="available-blocks-list"></div>
+    </div>
+    <div class="container dashboard" id="my-tasks" style="display:none;">
+        <div class="header">My Tasks</div>
+        <div id="my-tasks-list"></div>
     </div>
 </body>
 </html>
