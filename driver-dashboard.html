@@ -38,11 +38,13 @@
         function loadMyTasks() {
             try {
                 let storedTasks = localStorage.getItem('myTasks');
-                return storedTasks ? JSON.parse(storedTasks) : [];
+                return storedTasks && storedTasks !== 'undefined' ? JSON.parse(storedTasks) : [];
             } catch (error) {
                 console.error("Error parsing myTasks from localStorage, resetting to empty array:", error);
                 localStorage.setItem('myTasks', JSON.stringify([]));
                 return [];
+            }
+        }
             }
         }
 
