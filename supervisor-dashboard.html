@@ -36,8 +36,13 @@
         }
 
         function showDashboard(id) {
+            let dashboardElement = document.getElementById(id);
+            if (!dashboardElement) {
+                console.error('Dashboard element not found:', id);
+                return;
+            }
             document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
+            dashboardElement.style.display = 'block';
             if (id === 'active-shifts') {
                 displayActiveShifts();
             }
@@ -68,6 +73,10 @@
         function displayActiveShifts() {
             let activeShifts = loadActiveShifts();
             const activeShiftsContainer = document.getElementById('active-shifts-list');
+            if (!activeShiftsContainer) {
+                console.error('Active shifts container not found');
+                return;
+            }
             activeShiftsContainer.innerHTML = '';
             if (activeShifts.length === 0) {
                 activeShiftsContainer.innerHTML = '<p>No active shifts available.</p>';
