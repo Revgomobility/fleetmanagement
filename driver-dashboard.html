@@ -111,6 +111,11 @@
                 console.error('Invalid shift index:', index);
                 return;
             }
+            let acceptedShift = activeShifts[index];
+            acceptedShift.ridersRequired -= 1;
+            if (acceptedShift.ridersRequired < 1) {
+                activeShifts.splice(index, 1);
+            }
             myTasks.push(acceptedShift);
             saveActiveShifts(activeShifts);
             saveMyTasks(myTasks);
