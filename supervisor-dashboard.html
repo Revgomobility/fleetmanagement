@@ -48,6 +48,13 @@
         }
 
         function confirmRelease() {
+            let allShifts = [];
+            try {
+                allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
+            } catch (error) {
+                console.error("Error parsing allShifts from localStorage, resetting to empty array:", error);
+                localStorage.setItem('allShifts', JSON.stringify([]));
+            }
             const area = document.getElementById('release-area-select').value;
             const date = document.getElementById('date-select').value;
             const startTime = document.getElementById('start-time').value;
@@ -59,25 +66,31 @@
                 return;
             }
             
-            let activeShifts = loadActiveShifts();
             const shift = { area, date, startTime, endTime, ridersRequired };
-            activeShifts.push(shift);
-            saveActiveShifts(activeShifts);
-            console.log("Shift stored in localStorage:", activeShifts);
+            allShifts.push(shift);
+            localStorage.setItem('allShifts', JSON.stringify(allShifts));
+            console.log("Shift stored in localStorage:", allShifts);
             alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
-            displayActiveShifts();
-            showDashboard('active-shifts');
+            if (document.getElementById('active-shifts').style.display === 'block') {
+                displayActiveShifts();
+            }
         }
 
         function displayActiveShifts() {
-            let activeShifts = loadActiveShifts();
+            let allShifts = [];
+            try {
+                allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
+            } catch (error) {
+                console.error("Error parsing allShifts from localStorage, resetting to empty array:", error);
+                localStorage.setItem('allShifts', JSON.stringify([]));
+            }
             const activeShiftsContainer = document.getElementById('active-shifts-list');
             if (!activeShiftsContainer) {
                 console.error('Active shifts container not found');
                 return;
             }
             activeShiftsContainer.innerHTML = '';
-            if (activeShifts.length === 0) {
+            if (allShifts.length === 0) {
                 activeShiftsContainer.innerHTML = '<p>No active shifts available.</p>';
                 return;
             }
@@ -91,7 +104,7 @@
                     <th>Riders Required</th>
                 </tr>`;
             
-            activeShifts.forEach(shift => {
+            allShifts.forEach(shift => {
                 table += `<tr>
                     <td>${shift.area}</td>
                     <td>${shift.date}</td>
@@ -103,11 +116,15 @@
             
             table += `</table>`;
             activeShiftsContainer.innerHTML = table;
-            console.log("Active Shifts Displayed:", activeShifts);
-            document.getElementById('active-shifts-count').innerText = activeShifts.length;
+            console.log("Active Shifts Displayed:", allShifts);
+            document.getElementById('active-shifts-count').innerText = allShifts.length;
         }
 
-        document.addEventListener('DOMContentLoaded', displayActiveShifts);
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('active-shifts').style.display === 'block') {
+                displayActiveShifts();
+            }
+        });
     </script>
 </head>
 <body>
@@ -120,35 +137,6 @@
     <div class="container dashboard" id="active-shifts" style="display:none;">
         <div class="header">Active Shifts</div>
         <div id="active-shifts-list"></div>
-    </div>
-    <div class="container dashboard" id="block-release" style="display:none;">
-        <div class="header">Release Blocks</div>
-        <div class="form-group">
-            <label for="release-area-select">Select Area:</label>
-            <select id="release-area-select">
-                <option value="kondapur">Kondapur</option>
-                <option value="madhapur">Madhapur</option>
-                <option value="kukatpally">Kukatpally</option>
-                <option value="lingampally">Lingampally</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="date-select">Select Date:</label>
-            <input type="date" id="date-select">
-        </div>
-        <div class="form-group">
-            <label for="start-time">Start Time:</label>
-            <input type="time" id="start-time">
-        </div>
-        <div class="form-group">
-            <label for="end-time">End Time:</label>
-            <input type="time" id="end-time">
-        </div>
-        <div class="form-group">
-            <label for="riders-required">Number of Riders Required:</label>
-            <input type="number" id="riders-required" name="riders-required" min="1" max="100">
-        </div>
-        <a href="#" class="button" onclick="confirmRelease()">Confirm Release</a>
     </div>
 </body>
 </html>
