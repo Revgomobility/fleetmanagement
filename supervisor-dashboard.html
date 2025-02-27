@@ -22,8 +22,7 @@
     <script>
         function loadActiveShifts() {
             try {
-                let storedShifts = localStorage.getItem('activeShifts');
-                return storedShifts ? JSON.parse(storedShifts) : [];
+                return JSON.parse(localStorage.getItem('activeShifts')) || [];
             } catch (error) {
                 console.error("Error parsing activeShifts from localStorage, resetting to empty array:", error);
                 localStorage.setItem('activeShifts', JSON.stringify([]));
@@ -60,14 +59,9 @@
                 return;
             }
             
-            
-            const shift = { area, date, startTime, endTime, ridersRequired };
-            
             let activeShifts = loadActiveShifts();
+            const shift = { area, date, startTime, endTime, ridersRequired };
             activeShifts.push(shift);
-            
-            allShifts.push(shift);
-            localStorage.setItem('allShifts', JSON.stringify(allShifts));
             saveActiveShifts(activeShifts);
             console.log("Shift stored in localStorage:", activeShifts);
             alert(`Release confirmed for ${area} on ${date} from ${startTime} to ${endTime} with ${ridersRequired} riders.`);
@@ -76,8 +70,7 @@
         }
 
         function displayActiveShifts() {
-            let allShifts = JSON.parse(localStorage.getItem('allShifts')) || [];
-            let activeShifts = JSON.parse(localStorage.getItem('allShifts')) || []; // Ensure all shifts are displayed
+            let activeShifts = loadActiveShifts();
             const activeShiftsContainer = document.getElementById('active-shifts-list');
             if (!activeShiftsContainer) {
                 console.error('Active shifts container not found');
@@ -128,7 +121,7 @@
         <div class="header">Active Shifts</div>
         <div id="active-shifts-list"></div>
     </div>
-<div class="container dashboard" id="block-release" style="display:none;">
+    <div class="container dashboard" id="block-release" style="display:none;">
         <div class="header">Release Blocks</div>
         <div class="form-group">
             <label for="release-area-select">Select Area:</label>
@@ -156,7 +149,6 @@
             <input type="number" id="riders-required" name="riders-required" min="1" max="100">
         </div>
         <a href="#" class="button" onclick="confirmRelease()">Confirm Release</a>
-        <a href="#" class="button" onclick="showDashboard('supervisor-dashboard')">Back</a>
     </div>
 </body>
 </html>
